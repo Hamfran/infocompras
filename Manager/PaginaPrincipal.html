@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Proyecto</title>
+    <link rel="stylesheet" href="paginaprincipal.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <nav>
+                <a href="Login.html" class="nav-item"><i data-lucide="home"></i>Inicio</a>
+                <a href="#" class="nav-item"><i data-lucide="shopping-cart"></i>Productos</a>
+                <a href="Proveedor.html" class="nav-item"><i data-lucide="users"></i>Proveedores</a>
+                <a href="#" class="nav-item"><i data-lucide="package"></i>Pedidos</a>
+                <a href="#" class="nav-item"><i data-lucide="trending-up"></i>Estadísticas</a>
+                <a href="Estadistica.html" class="nav-item"><i data-lucide="dollar-sign"></i>Finanzas</a>
+                <a href="guatemala.html" class="nav-item"><i data-lucide="store"></i>Departamento</a>
+            </nav>
+        </aside>
+        <main>
+            <h1>Bienvenidos</h1>
+            
+            <section id="productos">
+                <h2>Porcesos....</h2>
+                <div class="product-grid">
+                    <div class="card">
+                        <h3>Concursos Vigentes</h3>
+                        <p>Quieres conocer todas las oportunidades que puedes realizar con nosotros</p>
+                        <img src="/Manager/Image/adjud.webp" alt="Producto 1" class="product-image">
+                        <p>Detalles...</p>
+                        <button>Ver Más</button>
+                    </div>
+                    <div class="card">
+                        <h3>Procesos Adjudicados</h3>
+                        <p>Quieres conocer cuantos procesos de adjudicacion estamos realizando el dia de hoy</p>
+                        <img src="/Manager/Image/compra.png" alt="Producto 2" class="product-image">
+                        <p>Detalles ...</p>
+                        <button>Ver Más</button>
+                    </div>
+                    <div class="card">
+                        <h3>Departamentos Beneficiados</h3>
+                        <p>Todos los departamentos que les fueron otorgados algun beneficio licitado con anterioridad</p>
+                        <img src="/Manager/Image/ubicacion.jpg" alt="Producto 3" class="product-image">
+                        <p>Detalles ...</p>
+                        <button>Ver Más</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="ventas">
+                <h2>Dashboard de todos los proceso de adjudicacion año 2024</h2>
+                <div class="dashboard">
+                    <div class="card">
+                        <h3>Compras Totales</h3>
+                        <p class="big-number">Q10,245</p>
+                    </div>
+                    <div class="card">
+                        <h3>Adjudicaciones</h3>
+                        <p class="big-number">124</p>
+                    </div>
+                    <div class="card">
+                        <h3>Articulos</h3>
+                        <p class="big-number">1,234</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="oferta">
+                <h2>Adjudicacion de Hoy</h2>
+                <div class="card">
+                    <h3>Articulos</h3>
+                    <p>¡Haz tu oferta ahora!</p>
+                    <img src="/placeholder.svg?height=300&width=300" alt="Blusa de Verano" class="product-image">
+                    <form id="ofertaForm">
+                        <input type="number" id="ofertaInput" placeholder="Tu oferta" required>
+                        <button type="submit">Ofertar</button>
+                    </form>
+                </div>
+            </section>
+            <section id="ofertas">
+                <h2>Ofertas Recibidas</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Usuario</th>
+                            <th>Oferta</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ofertasTableBody">
+                        <!-- Las ofertas se insertarán aquí dinámicamente -->
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+    <script src="/controller/ofertascontroller.js"></script> 
+    <script src="/controller/Estadistica.js"></script> 
+</body>
+</html>

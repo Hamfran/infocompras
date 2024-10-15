@@ -1,14 +1,18 @@
 const express = require('express');
 const { connectToDB } = require('./config/conexionBD'); // Importamos la conexión a la base de datos
 const clienteRoutes = require('./routers/clientes');
+const ProvedorRoutes = require('./routers/Proveedor');
 const dotenv = require('dotenv');
+
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 // Middleware para procesar el body de las peticiones como JSON
 app.use(express.json());
-//rutas
+//rutasconst clienteRoutes = require('./routers/clientes');
+app.use(express.static('Manager'));
+app.use('/Proveedor', ProvedorRoutes);
 app.use('/clientes', clienteRoutes);
 // Definir una ruta simple
 app.get('/', (req, res) => {

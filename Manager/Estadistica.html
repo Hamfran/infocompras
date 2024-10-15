@@ -1,0 +1,35 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Estadísticas</title>
+</head>
+<style> 
+body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #e7e6e6;
+        }
+        .dashboard {
+            display: flex;
+            
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+</style>
+<body>
+    <section class="sales-dashboard">
+        <h1>Ventas Recientes</h1>
+        <div class="dashboard">
+            <p>Total Ventas: Q1500</p>
+            <p>Envíos realizados: 25</p>
+            
+            <!-- Lienzo para el gráfico -->
+            <canvas id="salesChart" width="400" height="200"></canvas>
+        </div>
+    </section>
+</body>
+</html>
