@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LOGIN DE USUARIOS</title>
     <style>
+        /* Tu estilo permanece igual */
         * {
             margin: 0;
             padding: 0;
@@ -104,13 +105,12 @@
     <div class="login-container">
         <div class="header-image"></div>
         <h1>Bienvenido</h1>
-        <form>
-            <form onsubmit="event.preventDefault(); window.location.href='guatemala.html';"></form>
+        <form id="loginForm">
             <div class="input-group">
-                <input type="text" placeholder="Usuario" required>
+                <input type="text" id="nombre" placeholder="Usuario" required>
             </div>
             <div class="input-group">
-                <input type="password" placeholder="Constraseña" required>
+                <input type="password" id="contrasena" placeholder="Contraseña" required>
             </div>
             <div class="options">
                 <label>
@@ -124,5 +124,38 @@
             I N G E N I E R I A  E N  S I S T E M A S 2024
         </div>
     </div>
+
+    <script>
+        // Agregar el manejador para el formulario
+        document.getElementById('loginForm').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Evitar el envío tradicional del formulario
+
+            const nombre = document.getElementById('nombre').value;
+            const contrasena = document.getElementById('contrasena').value;
+
+            // Llamada a la API del backend para iniciar sesión
+            try {
+                const response = await fetch('/Usuarios/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ nombre, contrasena })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Si el inicio de sesión es exitoso, redirige a guatemala.html
+                    window.location.href = 'guatemala.html';
+                } else {
+                    alert(data.message || 'Error en el inicio de sesión');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al conectar con el servidor');
+            }
+        });
+    </script>
 </body>
 </html>

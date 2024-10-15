@@ -1,22 +1,29 @@
 const express = require('express');
-const { connectToDB } = require('./config/conexionBD'); // Importamos la conexión a la base de datos
-const clienteRoutes = require('./routers/clientes');
+const { poolPromise } = require('./config/conexionBD'); // Importamos la conexión a la base de datos
+const clienteRoutes = require('./routers/Usuarios');
+const departamentosRoutes = require('./routers/Departamentos'); // rutas para departamentos
 const dotenv = require('dotenv');
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Middleware para procesar el body de las peticiones como JSON
+// Middleware para procesar datos en formato JSON
 app.use(express.json());
+
+// Middleware para servir archivos estáticos desde la carpeta 'public'
+app.use(express.static('Manager')); // Aquí estamos sirviendo la carpeta 'Manager'
 //rutas
-app.use('/clientes', clienteRoutes);
+app.use('/Usuarios', clienteRoutes);
+
+app.use('/Departamentos', departamentosRoutes); // Agregar esta línea para los departamentos
+
 // Definir una ruta simple
 app.get('/', (req, res) => {
     res.send('¡Hola! Conexión a SQL Server funcionando.');
 });
 
 // Iniciar el servidor y conectar a la base de datos
-connectToDB().then(() => {
+poolPromise.then(() => {
     app.listen(port, () => {
         console.log(`Servidor escuchando en http://localhost:${port}`);
     });
