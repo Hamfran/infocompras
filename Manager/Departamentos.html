@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Departamentos de Guatemala</title>
+</head>
+<body>
+    <h1>Selecciona un Departamento</h1>
+    
+    <form action="/Departamentos" method="POST">
+        <label for="departamentos">Departamentos:</label>
+        <select id="departamentos" name="departamento">
+            <!-- Aquí se llenará la lista con los departamentos -->
+        </select>
+        <button type="submit">Enviar</button>
+    </form>
+
+    <script>
+        // Llamada para obtener los departamentos y llenar la lista
+        fetch('http://localhost:3000/departamentos') // Cambia la ruta según la ruta de tu API
+            .then(response => response.json())
+            .then(data => {
+                const select = document.getElementById('departamentos');
+                data.forEach(departamento => {
+                    const option = document.createElement('option');
+                    option.value = departamento.ID_DEPARTAMENTO;
+                    option.textContent = departamento.NOMBRE;
+                    select.appendChild(option);
+                });
+            })
+            .catch(error => {
+                console.error('Error al obtener los departamentos:', error);
+            });
+    </script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LOGIN DE USUARIOS</title>
+    <title>REGISTRO DE USUARIOS</title>
     <style>
         /* Tu estilo permanece igual */
         * {
@@ -18,7 +18,7 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background: url('/Manager/Image/tikal.jpg') no-repeat center center fixed;
+            background: url('/Image/tikal.jpg') no-repeat center center fixed;
             background-size: cover;
             position: relative;
         }
@@ -71,18 +71,6 @@
             outline: none;
         }
 
-        .options {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
-        }
-
-        .options a {
-            color: #0066cc;
-            text-decoration: none;
-        }
-
         button {
             width: 100%;
             padding: 0.75rem;
@@ -104,21 +92,27 @@
 <body>
     <div class="login-container">
         <div class="header-image"></div>
-        <h1>Bienvenido</h1>
-        <form id="loginForm">
+        <h1>Registro de Usuario</h1>
+        <form id="registerForm">
             <div class="input-group">
-                <input type="text" id="nombre" placeholder="Usuario" required>
+                <input type="text" id="nombre" placeholder="Nombre" required>
+            </div>
+            <div class="input-group">
+                <input type="text" id="apellido" placeholder="Apellido" required>
+            </div>
+            <div class="input-group">
+                <input type="text" id="telefono" placeholder="Teléfono" required>
+            </div>
+            <div class="input-group">
+                <input type="text" id="direccion" placeholder="Dirección" required>
             </div>
             <div class="input-group">
                 <input type="password" id="contrasena" placeholder="Contraseña" required>
             </div>
-            <div class="options">
-                <label>
-                    <input type="checkbox"> Remember
-                </label>
-                <a href="#">Forgot Password?</a>
+            <div class="input-group">
+                <input type="number" id="id_rol" placeholder="ID Rol" required>
             </div>
-            <button type="submit">Ingresar</button>
+            <button type="submit">Registrar</button>
         </form>
         <div class="footer">
             I N G E N I E R I A  E N  S I S T E M A S 2024
@@ -126,30 +120,35 @@
     </div>
 
     <script>
-        // Agregar el manejador para el formulario
-        document.getElementById('loginForm').addEventListener('submit', async function(event) {
+        // Agregar el manejador para el formulario de registro
+        document.getElementById('registerForm').addEventListener('submit', async function(event) {
             event.preventDefault(); // Evitar el envío tradicional del formulario
 
             const nombre = document.getElementById('nombre').value;
+            const apellido = document.getElementById('apellido').value;
+            const telefono = document.getElementById('telefono').value;
+            const direccion = document.getElementById('direccion').value;
             const contrasena = document.getElementById('contrasena').value;
+            const id_rol = document.getElementById('id_rol').value;
 
-            // Llamada a la API del backend para iniciar sesión
+            // Llamada a la API del backend para registrar el usuario
             try {
-                const response = await fetch('/Usuarios/login', {
+                const response = await fetch('/Usuarios/register', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ nombre, contrasena })
+                    body: JSON.stringify({ nombre, apellido, telefono, direccion, contrasena, id_rol })
                 });
 
                 const data = await response.json();
 
                 if (response.ok) {
-                    // Si el inicio de sesión es exitoso, redirige a guatemala.html
-                    window.location.href = 'guatemala.html';
+                    // Si el registro es exitoso, redirige a la página de inicio de sesión
+                    alert('Usuario registrado exitosamente');
+                    window.location.href = 'Login.html'; // Cambia esto a la ruta de tu página de inicio de sesión
                 } else {
-                    alert(data.message || 'Error en el inicio de sesión');
+                    alert(data.message || 'Error en el registro');
                 }
             } catch (error) {
                 console.error('Error:', error);

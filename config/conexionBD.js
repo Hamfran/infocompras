@@ -14,19 +14,19 @@ const dbConfig = {
     }
 };
 
-// Función para conectar a la base de datos
-const connectToDB = async () => {
-    try {
-        const pool = await sql.connect(dbConfig);
+// Crear y conectar el pool una vez
+const poolPromise = new sql.ConnectionPool(dbConfig)
+    .connect()
+    .then(pool => {
         console.log('Conectado a SQL Server');
         return pool;
-    } catch (error) {
-        console.error('Error al conectar a la base de datos:', error);
-        throw error;
-    }
-};
+    })
+    .catch(err => {
+        console.error('Error al conectar a la base de datos:', err);
+        throw err;
+    });
 
 module.exports = {
     sql,
-    connectToDB
+    poolPromise
 };
