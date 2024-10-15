@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REGISTRO DE USUARIOS</title>
+    <style>
+        /* Tu estilo permanece igual */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: url('/Image/tikal.jpg') no-repeat center center fixed;
+            background-size: cover;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: inherit;
+            filter: blur(8px);
+            z-index: -1;
+        }
+
+        .login-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .header-image {
+            width: 100%;
+            height: 200px;
+            background: url('') no-repeat center;
+            background-size: cover;
+            border-radius: 5px;
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #333;
+        }
+
+        .input-group {
+            margin-bottom: 1rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 0.75rem;
+            background: #0066cc;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="header-image"></div>
+        <h1>Registro de Usuario</h1>
+        <form id="registerForm">
+            <div class="input-group">
+                <input type="text" id="nombre" placeholder="Nombre" required>
+            </div>
+            <div class="input-group">
+                <input type="text" id="apellido" placeholder="Apellido" required>
+            </div>
+            <div class="input-group">
+                <input type="text" id="telefono" placeholder="Teléfono" required>
+            </div>
+            <div class="input-group">
+                <input type="text" id="direccion" placeholder="Dirección" required>
+            </div>
+            <div class="input-group">
+                <input type="password" id="contrasena" placeholder="Contraseña" required>
+            </div>
+            <div class="input-group">
+                <input type="number" id="id_rol" placeholder="ID Rol" required>
+            </div>
+            <button type="submit">Registrar</button>
+        </form>
+        <div class="footer">
+            I N G E N I E R I A  E N  S I S T E M A S 2024
+        </div>
+    </div>
+
+    <script>
+        // Agregar el manejador para el formulario de registro
+        document.getElementById('registerForm').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Evitar el envío tradicional del formulario
+
+            const nombre = document.getElementById('nombre').value;
+            const apellido = document.getElementById('apellido').value;
+            const telefono = document.getElementById('telefono').value;
+            const direccion = document.getElementById('direccion').value;
+            const contrasena = document.getElementById('contrasena').value;
+            const id_rol = document.getElementById('id_rol').value;
+
+            // Llamada a la API del backend para registrar el usuario
+            try {
+                const response = await fetch('/Usuarios/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ nombre, apellido, telefono, direccion, contrasena, id_rol })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Si el registro es exitoso, redirige a la página de inicio de sesión
+                    alert('Usuario registrado exitosamente');
+                    window.location.href = 'Login.html'; // Cambia esto a la ruta de tu página de inicio de sesión
+                } else {
+                    alert(data.message || 'Error en el registro');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al conectar con el servidor');
+            }
+        });
+    </script>
+</body>
+</html>

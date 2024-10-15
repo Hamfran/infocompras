@@ -34,24 +34,42 @@ exports.login = async (req, res) => {
 
 // Registrar un nuevo usuario
 exports.register = async (req, res) => {
-    const { nombre, apellido, contrasena, rol, telefono, direccion } = req.body;
+    const { nombre, apellido, telefono, direccion, contrasena, id_rol } = req.body;
+
+    // Verificar que todos los campos necesarios estén presentes
+    if (!nombre || !apellido || !telefono || !direccion || !contrasena || id_rol === undefined) {
+        return res.status(400).json({ message: 'Todos los campos son obligatorios' });
+    }
 
     try {
-        const hashedPassword = await bcrypt.hash(contrasena, 10); // Encriptar contraseña
+        // Encriptar la contraseña
+        const hashedPassword = await bcrypt.hash(contrasena, 10); // Usar await para la versión asíncrona
 
-        const pool = await poolPromise;
+        // Preparar la consulta de inserción
+        const query = `
+            INSERT INTO USUARIOS (NOMBRE, PASWORD, ID_ROL, APELLIDO, TELEFONO, DIRECCION)
+            VALUES (@nombre, @pasword, @id_rol, @apellido, @telefono, @direccion)`;
+
+        // Realizar la inserción
+        const pool = await poolPromise; // Usa poolPromise para la conexión
         await pool.request()
             .input('nombre', sql.VarChar, nombre)
+            .input('pasword', sql.VarChar, hashedPassword)
+            .input('id_rol', sql.Int, id_rol)
             .input('apellido', sql.VarChar, apellido)
-            .input('hashedPassword', sql.VarChar, hashedPassword)
-            .input('rol', sql.Int, rol)
             .input('telefono', sql.VarChar, telefono)
             .input('direccion', sql.VarChar, direccion)
-            .query('INSERT INTO USUARIOS (NOMBRE, APELLIDO, PASWORD, ID_ROL, TELEFONO, DIRECCION) VALUES (@nombre, @apellido, @hashedPassword, @rol, @telefono, @direccion)');
+            .query(query);
 
+        // Enviar respuesta de éxito
         res.status(201).json({ message: 'Usuario registrado exitosamente' });
+
     } catch (err) {
-        console.error('Error en la base de datos:', err);
-        res.status(500).json({ message: 'Error en la base de datos' });
+        console.error('Error al registrar usuario:', err);
+        // Manejo de errores específico
+        if (err.code === 'ER_DUP_ENTRY') { // Cambia esto según el error específico que SQL Server devuelva
+            return res.status(409).json({ message: 'El usuario ya existe' });
+        }
+        res.status(500).json({ message: 'Error en la base de datos al registrar usuario' });
     }
 };
