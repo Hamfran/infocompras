@@ -1,6 +1,8 @@
 const express = require('express');
 const { poolPromise } = require('./config/conexionBD'); // Importamos la conexión a la base de datos
 const clienteRoutes = require('./routers/Usuarios');
+const proveedorRoutes= require('./routers/Proveedor')
+const verproveedorRoutes= require('./routers/Proveedor')
 const departamentosRoutes = require('./routers/Departamentos'); // rutas para departamentos
 const dotenv = require('dotenv');
 
@@ -16,8 +18,11 @@ app.use(express.static('Manager')); // Aquí estamos sirviendo la carpeta 'Manag
 //rutas
 app.use('/Usuarios', clienteRoutes);
 
-app.use('/Departamentos', departamentosRoutes); // Agregar esta línea para los departamentos
+app.use('/Departamentos', departamentosRoutes); 
+// Agregar esta línea para los departamentos
+app.use('/Registro', proveedorRoutes);
 
+app.use('/Verproveedores', verproveedorRoutes);
 // Definir una ruta simple
 app.get('/', (req, res) => {
     res.send('¡Hola! Conexión a SQL Server funcionando.');

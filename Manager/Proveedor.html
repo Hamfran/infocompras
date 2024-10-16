@@ -6,6 +6,7 @@
     <title>Ingresar Proveedor</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -41,22 +42,27 @@
             
             <div class="form-group">
                 <label for="nombreInput">Nombre:</label>
-                <input type="text" class="form-control" id="nombreInput" placeholder="Ingrese nombre" required>
+                <input type="text" class="form-control" id="nombre" placeholder=" nombre" required>
             </div>
             <div class="form-group">
                 <label for="contactoInput">Contacto:</label>
-                <input type="text" class="form-control" id="contactoInput" placeholder="Ingrese contacto" required>
+                <input type="text" class="form-control" id="contacto" placeholder="contacto" required>
             </div>
             <div class="form-group">
                 <label for="nitInput">Nit:</label>
-                <input type="number" class="form-control" id="nitInput" placeholder="Ingrese nit" required>
+                <input type="number" class="form-control" id="nit" placeholder="nit" required>
             </div>
             <div class="form-group">
                 <label for="correoInput">Correo:</label>
-                <input type="text" class="form-control" id="correoInput" placeholder="Ingrese correo" required>
+                <input type="text" class="form-control" id="correo" placeholder=" correo" required>
             </div>
-            
             <button type="submit" class="btn btn-primary">Ingresar Proveedor</button>
+            <button type="submit" class="btn btn-secondary" onclick="regresar()">Actulizar</button>
+            <button type="submit" class="btn btn-secondary" >Ver</button>
+            <button type="submit" class="btn btn-secondary" >Buscar</button>
+            <button type="submit" class="btn btn-secondary" >Eliminar</button>
+            <button type="submit" class="btn btn-secondary" onclick="regresar()">Regresar proveedor</button>
+
         </form>
     </div>
     <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
@@ -77,6 +83,22 @@
             </div>
         </div>
     </div>
+
+    <table class="table table-striped" id="tablaProveedores">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Nombre</th>
+                <th>Contacto</th>
+                <th>NIT</th>
+                <th>Correo</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Aquí se agregarán las filas de proveedores dinámicamente -->
+        </tbody>
+    </table>
+</div>
     <script>
         // Agregar el manejador para el formulario de registro
         document.getElementById('ingresarproveedorForm').addEventListener('submit', async function(event) {
@@ -86,11 +108,10 @@
             const contacto = document.getElementById('contacto').value;
             const nit = document.getElementById('nit').value;
             const correo = document.getElementById('correo').value;
-          
 
             // Llamada a la API del backend para registrar el usuario
             try {
-                const response = await fetch('/Proveedor/proveedor', {
+                const response = await fetch('/Registro/registropro', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -101,9 +122,9 @@
                 const data = await response.json();
 
                 if (response.ok) {
-                    // Si el registro es exitoso, redirige a la página de inicio de sesión
+                    
                     alert('Proveedor registrado exitosamente');
-                    window.location.href = 'Proveedor.html'; // Cambia esto a la ruta de tu página de inicio de sesión
+                    
                 } else {
                     alert(data.message || 'Error en el registro');
                 }
@@ -112,12 +133,52 @@
                 alert('Error al conectar con el servidor');
             }
         });
+
+        async function verproveedores() {
+            try {
+                const response = await fetch('/Registro/verproveedores');
+                const proveedores = await response.json();
+
+                if (response.ok) {
+                    mostrarProveedores(proveedores);
+                } else {
+                    alert('Error al cargar proveedores');
+                }
+            } catch (error) {
+                console.error('Error al obtener proveedores:', error);
+                alert('Error al conectar con el servidor');
+            }
+        }
+
+        function mostrarProveedores(proveedores) {
+            const tabla = document.querySelector('#tablaProveedores tbody');
+            tabla.innerHTML = ''; // Limpiar la tabla antes de agregar los nuevos datos
+
+            proveedores.forEach(proveedor => {
+                const fila = document.createElement('tr');
+                fila.innerHTML = `
+                    <td>${proveedor.CODIGO}</td>
+                    <td>${proveedor.NOMBRE}</td>
+                    <td>${proveedor.CONTACTO}</td>
+                    <td>${proveedor.NIT}</td>
+                    <td>${proveedor.CORREO}</td>
+                `;
+                tabla.appendChild(fila);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', verproveedores);
+
+        function regresar() {
+        window.location.href = 'PaginaPrincipal.html'; 
+        document.addEventListener('DOMContentLoaded', verClientes);
+    }
     </script>
 
     <!-- Bootstrap JS y Script para manejar el formulario -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src="/controller/proveedorController.js"></script>
 </body>
 
