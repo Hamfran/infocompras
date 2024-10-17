@@ -18,7 +18,7 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background: url('/Manager/Image/tikal.jpg') no-repeat center center fixed;
+            background: url('/Image/tikal.jpg') no-repeat center center fixed;
             background-size: cover;
             position: relative;
         }
@@ -145,9 +145,9 @@
 
                 const data = await response.json();
 
-                if (response.ok) {
+                if (response.ok) { 
                     // Si el inicio de sesión es exitoso, redirige a guatemala.html
-                    window.location.href = 'guatemala.html';
+                    window.location.href = 'PaginaPrincipal.html';
                 } else {
                     alert(data.message || 'Error en el inicio de sesión');
                 }

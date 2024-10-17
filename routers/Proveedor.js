@@ -5,5 +5,5 @@ const proveedorController= require('../controller/proveedorController');
 // Ruta para registrar un nuevo usuario 
 router.post('/registropro', proveedorController.registropro)
 
-router.post('/verproveedores', proveedorController.verprovedor)
+router.get('/verproveedores', proveedorController.verprovedor)
 module.exports = router;
