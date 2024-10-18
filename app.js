@@ -1,9 +1,11 @@
 const express = require('express');
 const { poolPromise } = require('./config/conexionBD'); // Importamos la conexión a la base de datos
 const clienteRoutes = require('./routers/Usuarios');
-const proveedorRoutes= require('./routers/Proveedor')
-const verproveedorRoutes= require('./routers/Proveedor')
+const proveedorRoutes= require('./routers/Proveedor');
+const verproveedorRoutes= require('./routers/Proveedor');
 const departamentosRoutes = require('./routers/Departamentos'); // rutas para departamentos
+const licitacionRoutes = require('./routers/Licitacion'); // rutas para departamentos
+
 const dotenv = require('dotenv');
 
 
@@ -24,6 +26,8 @@ app.use('/Registro', proveedorRoutes);
 
 app.use('/Verproveedores', verproveedorRoutes);
 // Definir una ruta simple
+app.use('/Licitacion', licitacionRoutes);
+
 app.get('/', (req, res) => {
     res.send('¡Hola! Conexión a SQL Server funcionando.');
 });
