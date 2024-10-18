@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestionar Solicitud</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .card {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .form-control:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid py-3">
+        <div class="row justify-content-between">
+            <!-- Contenedor Generar Solicitud (Izquierda) -->
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h2 class="text-center mb-0">Genere una Solicitud</h2>
+                    </div>
+                    <div class="card-body">
+                        <form id="ticketForm">
+                            <!-- Campos del formulario -->
+                            <div class="mb-3">
+                                <label for="usuario" class="form-label"><i class="bi bi-person"></i> Usuario</label>
+                                <input type="text" class="form-control" id="usuario" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="categoria" class="form-label"><i class="bi bi-tag"></i> Categoría</label>
+                                <input type="text" class="form-control" id="categoria" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="idProducto" class="form-label"><i class="bi bi-box"></i> ID Producto</label>
+                                <input type="text" class="form-control" id="idProducto" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="cantidad" class="form-label"><i class="bi bi-123"></i> Cantidad</label>
+                                <input type="number" class="form-control" id="cantidad" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="montoTotal" class="form-label"><i class="bi bi-currency-quetzal"></i> Monto Total</label>
+                                <input type="number" class="form-control" id="montoTotal" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="descripcion" class="form-label"><i class="bi bi-file-text"></i> Descripción</label>
+                                <input type="text" class="form-control" id="descripcion" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="idDepartamento" class="form-label"><i class="bi bi-building"></i> ID Departamento</label>
+                                <input type="text" class="form-control" id="idDepartamento" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="idMunicipio" class="form-label"><i class="bi bi-location"></i> ID Municipio</label>
+                                <input type="text" class="form-control" id="idMunicipio" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="estado" class="form-label"><i class="bi bi-activity"></i> Estado</label>
+                                <input type="text" class="form-control" id="estado" required>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <button type="button" class="btn btn-secondary" onclick="regresar()">Regresar</button>
+                                <button type="submit" class="btn btn-primary">Generar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+    
+                <!-- Contenedor del Ticket Generado (Centrado entre las dos columnas) -->
+                <div id="ticketContainer" class="card d-none">
+                    <div class="card-header bg-success text-white">
+                        <h3 class="text-center mb-0">Ticket Generado</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="ticketContent"></div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between">
+                        <button class="btn btn-success" onclick="aceptarTicket()"><i class="bi bi-check-circle"></i> Aceptar</button>
+                        <button class="btn btn-danger" onclick="eliminarTicket()"><i class="bi bi-trash"></i> Eliminar</button>
+                        <button class="btn btn-primary" onclick="generarNuevoTicket()"><i class="bi bi-arrow-repeat"></i> Generar Nuevo</button>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- Contenedor Información Adicional (Derecha) -->
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-header bg-info text-white">
+                        <h3 class="text-center mb-0">Información Adicional</h3>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Categoría</th>
+                                    <th>Código</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Datos de la tabla -->
+                                <tr><td>Alimentos y semillas</td><td>1</td></tr>
+                                <tr><td>Bienes inmuebles</td><td>2</td></tr>
+                                <tr><td>Computación y telecomunicaciones</td><td>3</td></tr>
+                                <tr><td>Construcción y materiales afines</td><td>4</td></tr>
+                                <tr><td>Electricidad y aire acondicionado</td><td>5</td></tr>
+                                <tr><td>Limpieza, fumigación y artículos afines</td><td>6</td></tr>
+                                <tr><td>Muebles y mobiliario de oficina</td><td>7</td></tr>
+                                <tr><td>Otros tipos de bienes o servicios</td><td>8</td></tr>
+                                <tr><td>Papelería y artículos de librería</td><td>9</td></tr>
+                                <tr><td>Publicidad, campañas y vallas</td><td>10</td></tr>
+                                <tr><td>Salud e insumos hospitalarios</td><td>11</td></tr>
+                                <tr><td>Seguridad y armamento</td><td>12</td></tr>
+                                <tr><td>Seguros, fianzas y servicios bancarios</td><td>13</td></tr>
+                                <tr><td>Textiles, ropa y calzado</td><td>14</td></tr>
+                                <tr><td>Transporte, repuestos y combustibles</td><td>15</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table class="table table-striped" id="tablasolicitudes">
+        <thead>
+            <tr>
+                <th>ID_SOLICITUD</th>
+                <th>IDUSUARIO</th>
+                <th>CANTIDAD</th>
+                <th>FECHA</th>
+                <th>MONTO_TOTAL</th>
+                <th>ESTADO</th>
+                <th>IDPRODUCTO</th>
+                <th>DESCRIPCION</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Aquí se agregarán las filas de proveedores dinámicamente -->
+        </tbody>
+    </table>
+    <script>
+
+         // Agregar el manejador para el formulario de registro
+            document.getElementById('ticketContainer').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Evitar el envío tradicional del formulario
+
+            const usuario = document.getElementById('usuario').value;
+            const idcategoria = document.getElementById('idcategoria').value;
+            const montototal = document.getElementById('montototal').value;
+            const cantidad = document.getElementById('cantidad').value;
+            const iddepartamento = document.getElementById('iddepartamento').value;
+            const estado = document.getElementById('estado').value;
+            const idproducto = document.getElementById('idproducto').value;
+            const descripcion = document.getElementById('descripcion').value;
+
+            // Llamada a la API del backend para registrar el usuario
+            try {
+                const response = await fetch('/Solicitud/generarsolicitud', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ usuario, idcategoria, cantidad, montototal, iddepartamento, estado, idproducto, descripcion })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    
+                    alert('Solicitud registrado exitosamente');
+                    
+                } else {
+                    alert(data.message || 'Error en el registro');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al conectar con el servidor');
+            }
+        });
+
+        async function versolicitudes() {
+            try {
+                const response = await fetch('/Solicitud/versolicitud');
+                const solicitud = await response.json();
+
+                if (response.ok) {
+                    mostrarsolicitud(solicitud);
+                } else {
+                    alert('Error al cargar solicitud');
+                }
+            } catch (error) {
+                console.error('Error al obtener solicitudes:', error);
+                alert('Error al conectar con el servidor');
+            }
+        }
+
+        function mostrarsolicitud(solicitudes) {
+            const tabla = document.querySelector('#tablasolicitudes tbody');
+            tabla.innerHTML = ''; // Limpiar la tabla antes de agregar los nuevos datos
+
+            solicitudes.forEach(solicitud => {
+                const fila = document.createElement('tr');
+                fila.innerHTML = `
+                    <td>${solicitud.ID_SOLICITUD || 'N/A'}</td>
+                    <td>${solicitud.IDUSUARIO || 'N/A'}</td>
+                    <td>${solicitud.CANTIDAD || 'N/A'}</td>
+                    <td>${solicitud.FECHA || 'N/A'}</td>
+                    <td>${solicitud.MONTOTOTAL || 'N/A'}</td>
+                    <td>${solicitud.ESTADO || 'N/A'}</td>
+                    <td>${solicitud.IDPRODUCTO || 'N/A'}</td>
+                    <td>${solicitud.DESCRIPCION || 'N/A'}</td>
+                    `;
+                tabla.appendChild(fila);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', versolicitudes);
+
+        function regresar() {
+        window.location.href = 'PaginaPrincipal.html'; 
+        document.addEventListener('DOMContentLoaded', mostrarsolicitud);
+    }
+        document.getElementById('ticketForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            generarTicket();
+        });
+
+        function generarTicket() {
+            const ticketData = {
+                usuario: document.getElementById('usuario').value,
+                categoria: document.getElementById('categoria').value,
+                idProducto: document.getElementById('idProducto').value,
+                cantidad: document.getElementById('cantidad').value,
+                montoTotal: document.getElementById('montoTotal').value,
+                descripcion: document.getElementById('descripcion').value,
+                idDepartamento: document.getElementById('idDepartamento').value,
+              
+                estado: document.getElementById('estado').value
+            };
+
+            const fechaActual = new Date().toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' });
+            const ticketContent = `
+                <p><i class="bi bi-geo-alt text-primary"></i> ${fechaActual}</p>
+                <p><i class="bi bi-person text-primary"></i> Usuario: ${ticketData.usuario}</p>
+                <p><i class="bi bi-tag text-primary"></i> Categoría: ${ticketData.categoria}</p>
+                <p><i class="bi bi-box text-primary"></i> ID Producto: ${ticketData.idProducto}</p>
+                <p><i class="bi bi-123 text-primary"></i> Cantidad: ${ticketData.cantidad}</p>
+                <p><i class="bi bi-currency-euro text-primary"></i> Monto Total: ${ticketData.montoTotal}€</p>
+                <p><i class="bi bi-file-text text-primary"></i> Descripción: ${ticketData.descripcion}</p>
+                <p><i class="bi bi-building text-primary"></i> ID Departamento: ${ticketData.idDepartamento}</p>
+               
+                <p><i class="bi bi-activity text-primary"></i> Estado: ${ticketData.estado}</p>
+            `;
+
+            document.getElementById('ticketContent').innerHTML = ticketContent;
+            document.getElementById('ticketContainer').classList.remove('d-none');
+        }
+
+        function regresar() {
+            document.getElementById('ticketForm').reset();
+            document.getElementById('ticketContainer').classList.add('d-none');
+        }
+
+        function aceptarTicket() {
+
+            alert('Ticket aceptado');
+        }
+
+        function eliminarTicket() {
+            document.getElementById('ticketContainer').classList.add('d-none');
+        }
+
+        function generarNuevoTicket() {
+            document.getElementById('ticketForm').reset();
+            document.getElementById('ticketContainer').classList.add('d-none');
+        }
+
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
