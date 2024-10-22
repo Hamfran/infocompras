@@ -3,13 +3,11 @@ const { poolPromise } = require('./config/conexionBD'); // Importamos la conexi�
 const clienteRoutes = require('./routers/Usuarios');
 const proveedorRoutes= require('./routers/Proveedor');
 const verproveedorRoutes= require('./routers/Proveedor');
+const selectGuatemalaRouter=require('./routers/selectGuatemala');
 const imprimirpdfRouters=require('./routers/Proveedor');
-const departamentosRoutes = require('./routers/Departamentos'); // rutas para departamentos
 const licitacionRoutes = require('./routers/Licitacion'); // rutas para departamentos
 const generarsolicitudRoutes = require('./routers/Solicitud'); // rutas para departamentos
 const dotenv = require('dotenv');
-
-
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -21,7 +19,6 @@ app.use(express.static('Manager')); // Aquí estamos sirviendo la carpeta 'Manag
 //rutas
 app.use('/Usuarios', clienteRoutes);
 
-app.use('/Departamentos', departamentosRoutes); 
 // Agregar esta línea para los departamentos
 app.use('/Registro', proveedorRoutes);
 
@@ -29,6 +26,8 @@ app.use('/Verproveedores', verproveedorRoutes);
 app.use('/imprimirpdf', imprimirpdfRouters);
 //Nuevo de solicitud
 app.use('/Solicitud', generarsolicitudRoutes);
+//click en el departamento en svg
+app.use('/Buscardepa', selectGuatemalaRouter);
 // Definir una ruta simple
 app.use('/Licitacion', licitacionRoutes);
 
