@@ -3,8 +3,8 @@ const { poolPromise } = require('./config/conexionBD'); // Importamos la conexi�
 const clienteRoutes = require('./routers/Usuarios');
 const proveedorRoutes= require('./routers/Proveedor')
 const verproveedorRoutes= require('./routers/Proveedor')
-const generarsolicitudRoutes = require('./routers/Solicitud');
-const selectGuatemalaRouter = require('./routers/selectGuatemala');// rutas para departamentos
+const departamentosRoutes = require('./routers/Departamentos'); 
+const generarsolicitudRoutes = require('./routers/Solicitud'); // rutas para departamentos
 const dotenv = require('dotenv');
 const app = express();
 const port = process.env.PORT || 3000;
@@ -26,6 +26,8 @@ app.use('/Solicitud', generarsolicitudRoutes);
 //click en el departamento en svg
 app.use('/Buscardepa', selectGuatemalaRouter);
 // Definir una ruta simple
+app.use('/Licitacion', licitacionRoutes);
+
 app.get('/', (req, res) => {
     res.send('¡Hola! Conexión a SQL Server funcionando.');
 });
