@@ -61,6 +61,7 @@
             <button type="submit" class="btn btn-secondary" >Ver</button>
             <button type="submit" class="btn btn-secondary" >Buscar</button>
             <button type="submit" class="btn btn-secondary" >Eliminar</button>
+            <button type="button" class="btn btn-secondary" onclick="imprimir()">Imprimir</button>
             <button type="submit" class="btn btn-secondary" onclick="regresar()">Regresar</button>
 
         </form>
@@ -173,6 +174,27 @@
         window.location.href = 'PaginaPrincipal.html'; 
         document.addEventListener('DOMContentLoaded', mostrarProveedores);
     }
+    async function imprimir() {
+    try {
+        const response = await fetch('/imprimirpdf/imprimir'); // Asegúrate de que esta ruta sea correcta
+        if (response.ok) {
+            const blob = await response.blob(); // Obtener el blob de la respuesta
+            const url = window.URL.createObjectURL(blob); // Crear una URL para el blob
+            const a = document.createElement('a'); // Crear un enlace
+            a.href = url;
+            a.download = 'proveedores.pdf'; // Nombre del archivo PDF
+            document.body.appendChild(a); // Agregar el enlace al DOM
+            a.click(); // Simular clic en el enlace para descargar el PDF
+            a.remove(); // Eliminar el enlace del DOM
+        } else {
+            alert('Error al descargar el PDF');
+        }
+    } catch (error) {
+        console.error('Error al obtener el PDF:', error);
+        alert('Error al conectar con el servidor');
+    }
+}
+
     </script>
 
     <!-- Bootstrap JS y Script para manejar el formulario -->

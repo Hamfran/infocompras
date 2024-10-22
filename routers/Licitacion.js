@@ -6,6 +6,9 @@ const licitacionController = require('../controller/LicitacionController');
 router.post('/insertLicitacion', licitacionController.insertLicitacion);
 
 // Ruta para actualizar una licitación existente
-router.put('/actualizarlicitacion', licitacionController.updateLicitacion);
+router.put('/actualizarlicitacion/:id', licitacionController.updateLicitacion);
+router.get('/buscarLicitacion/:id',licitacionController.getLicitacion);
+router.get('/getFechaSolicitud/:id',licitacionController.getFechaSolicitud);
+
 
 module.exports = router;

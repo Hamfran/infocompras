@@ -3,6 +3,7 @@ const { poolPromise } = require('./config/conexionBD'); // Importamos la conexi√
 const clienteRoutes = require('./routers/Usuarios');
 const proveedorRoutes= require('./routers/Proveedor');
 const verproveedorRoutes= require('./routers/Proveedor');
+const imprimirpdfRouters=require('./routers/Proveedor');
 const departamentosRoutes = require('./routers/Departamentos'); // rutas para departamentos
 const licitacionRoutes = require('./routers/Licitacion'); // rutas para departamentos
 const generarsolicitudRoutes = require('./routers/Solicitud'); // rutas para departamentos
@@ -25,6 +26,7 @@ app.use('/Departamentos', departamentosRoutes);
 app.use('/Registro', proveedorRoutes);
 
 app.use('/Verproveedores', verproveedorRoutes);
+app.use('/imprimirpdf', imprimirpdfRouters);
 //Nuevo de solicitud
 app.use('/Solicitud', generarsolicitudRoutes);
 // Definir una ruta simple
