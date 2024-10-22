@@ -9,15 +9,20 @@
     
     <style>
         body {
-            background-color: #f8f9fa;
+            background-color: #e9ecf0;
         }
         .card {
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
         }
         .form-control:focus {
             border-color: #0d6efd;
             box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
         }
+        .ticket-content p {
+            margin-bottom: 5px;
+        }
+
     </style>
 </head>
 <body>
@@ -34,11 +39,11 @@
                             <!-- Campos del formulario -->
                             <div class="mb-3">
                                 <label for="usuario" class="form-label"><i class="bi bi-person"></i> Usuario</label>
-                                <input type="text" class="form-control" id="usuario" required>
+                                <input type="text" class="form-control" id="idusuario" required>
                             </div>
                             <div class="mb-3">
                                 <label for="categoria" class="form-label"><i class="bi bi-tag"></i> Categoría</label>
-                                <input type="text" class="form-control" id="categoria" required>
+                                <input type="text" class="form-control" id="idcategoria" required>
                             </div>
                             <div class="mb-3">
                                 <label for="idProducto" class="form-label"><i class="bi bi-box"></i> ID Producto</label>
@@ -61,15 +66,12 @@
                                 <input type="text" class="form-control" id="idDepartamento" required>
                             </div>
                             <div class="mb-3">
-                                <label for="idMunicipio" class="form-label"><i class="bi bi-location"></i> ID Municipio</label>
-                                <input type="text" class="form-control" id="idMunicipio" required>
-                            </div>
-                            <div class="mb-3">
                                 <label for="estado" class="form-label"><i class="bi bi-activity"></i> Estado</label>
                                 <input type="text" class="form-control" id="estado" required>
                             </div>
                             <div class="d-flex justify-content-between">
                                 <button type="button" class="btn btn-secondary" onclick="regresar()">Regresar</button>
+                                <button type="button" class="btn btn-secondary" onclick="regresarainicio()">Inicio</button>
                                 <button type="submit" class="btn btn-primary">Generar</button>
                             </div>
                         </form>
@@ -134,12 +136,14 @@
         <thead>
             <tr>
                 <th>ID_SOLICITUD</th>
-                <th>IDUSUARIO</th>
+                <th>ID_USUARIO</th>
+                <th>ID_CATEGORIA</th>
                 <th>CANTIDAD</th>
-                <th>FECHA</th>
                 <th>MONTO_TOTAL</th>
+                <th>FECHA_SOLICITUD</th>
+                <th>ID_DEPARTAMENTO</th>
                 <th>ESTADO</th>
-                <th>IDPRODUCTO</th>
+                <th>ID_PRODUCTO</th>
                 <th>DESCRIPCION</th>
             </tr>
         </thead>
@@ -148,20 +152,18 @@
         </tbody>
     </table>
     <script>
-
-         // Agregar el manejador para el formulario de registro
-            document.getElementById('ticketContainer').addEventListener('submit', async function(event) {
+            document.getElementById('ticketForm').addEventListener('submit', async function(event) {
             event.preventDefault(); // Evitar el envío tradicional del formulario
-
-            const usuario = document.getElementById('usuario').value;
+            generarTicket();
+            const usuario = document.getElementById('idusuario').value;
             const idcategoria = document.getElementById('idcategoria').value;
-            const montototal = document.getElementById('montototal').value;
+            const idproducto = document.getElementById('idProducto').value;
             const cantidad = document.getElementById('cantidad').value;
-            const iddepartamento = document.getElementById('iddepartamento').value;
-            const estado = document.getElementById('estado').value;
-            const idproducto = document.getElementById('idproducto').value;
+            const montototal = document.getElementById('montoTotal').value;
             const descripcion = document.getElementById('descripcion').value;
-
+            const iddepartamento = document.getElementById('idDepartamento').value;
+            const estado = document.getElementById('estado').value;
+            
             // Llamada a la API del backend para registrar el usuario
             try {
                 const response = await fetch('/Solicitud/generarsolicitud', {
@@ -169,7 +171,16 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ usuario, idcategoria, cantidad, montototal, iddepartamento, estado, idproducto, descripcion })
+                    body: JSON.stringify({
+                        ID_USUARIO: usuario,
+                        ID_CATEGORIA: idcategoria,
+                        CANTIDAD: cantidad,
+                        MONTO_TOTAL: montototal,
+                        ID_DEPARTAMENTO: iddepartamento,
+                        ESTADO: estado,
+                        ID_PRODUCTO: idproducto,
+                        DESCRIPCION: descripcion
+                        })
                 });
 
                 const data = await response.json();
@@ -186,7 +197,7 @@
                 alert('Error al conectar con el servidor');
             }
         });
-
+        
         async function versolicitudes() {
             try {
                 const response = await fetch('/Solicitud/versolicitud');
@@ -211,21 +222,24 @@
                 const fila = document.createElement('tr');
                 fila.innerHTML = `
                     <td>${solicitud.ID_SOLICITUD || 'N/A'}</td>
-                    <td>${solicitud.IDUSUARIO || 'N/A'}</td>
+                    <td>${solicitud.ID_USUARIO || 'N/A'}</td>
+                    <td>${solicitud.ID_CATEGORIA || 'N/A'}</td>
                     <td>${solicitud.CANTIDAD || 'N/A'}</td>
-                    <td>${solicitud.FECHA || 'N/A'}</td>
-                    <td>${solicitud.MONTOTOTAL || 'N/A'}</td>
+                    <td>${solicitud.MONTO_TOTAL || 'N/A'}</td>
+                    <td>${solicitud.FECHA_SOLICITUD || 'N/A'}</td>
+                    <td>${solicitud.ID_DEPARTAMENTO || 'N/A'}</td>
                     <td>${solicitud.ESTADO || 'N/A'}</td>
-                    <td>${solicitud.IDPRODUCTO || 'N/A'}</td>
+                    <td>${solicitud.ID_PRODUCTO || 'N/A'}</td>
                     <td>${solicitud.DESCRIPCION || 'N/A'}</td>
                     `;
+                
                 tabla.appendChild(fila);
             });
         }
 
         document.addEventListener('DOMContentLoaded', versolicitudes);
 
-        function regresar() {
+        function regresarainicio() {
         window.location.href = 'PaginaPrincipal.html'; 
         document.addEventListener('DOMContentLoaded', mostrarsolicitud);
     }
@@ -236,14 +250,13 @@
 
         function generarTicket() {
             const ticketData = {
-                usuario: document.getElementById('usuario').value,
-                categoria: document.getElementById('categoria').value,
+                usuario: document.getElementById('idusuario').value,
+                categoria: document.getElementById('idcategoria').value,
                 idProducto: document.getElementById('idProducto').value,
                 cantidad: document.getElementById('cantidad').value,
                 montoTotal: document.getElementById('montoTotal').value,
                 descripcion: document.getElementById('descripcion').value,
                 idDepartamento: document.getElementById('idDepartamento').value,
-              
                 estado: document.getElementById('estado').value
             };
 
@@ -254,10 +267,9 @@
                 <p><i class="bi bi-tag text-primary"></i> Categoría: ${ticketData.categoria}</p>
                 <p><i class="bi bi-box text-primary"></i> ID Producto: ${ticketData.idProducto}</p>
                 <p><i class="bi bi-123 text-primary"></i> Cantidad: ${ticketData.cantidad}</p>
-                <p><i class="bi bi-currency-euro text-primary"></i> Monto Total: ${ticketData.montoTotal}€</p>
+                <p><i class="bi bi-currency text-primary"></i> Monto Total: ${ticketData.montoTotal}Q</p>
                 <p><i class="bi bi-file-text text-primary"></i> Descripción: ${ticketData.descripcion}</p>
                 <p><i class="bi bi-building text-primary"></i> ID Departamento: ${ticketData.idDepartamento}</p>
-               
                 <p><i class="bi bi-activity text-primary"></i> Estado: ${ticketData.estado}</p>
             `;
 
@@ -270,10 +282,6 @@
             document.getElementById('ticketContainer').classList.add('d-none');
         }
 
-        function aceptarTicket() {
-
-            alert('Ticket aceptado');
-        }
 
         function eliminarTicket() {
             document.getElementById('ticketContainer').classList.add('d-none');
