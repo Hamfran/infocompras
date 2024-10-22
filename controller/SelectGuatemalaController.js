@@ -1,10 +1,11 @@
+
 const { poolPromise,sql } = require('../config/conexionBD');
 
 
 
 exports.verDepartamentoPorId = async (req, res) => {
     try {
-        const { id } = req.params; // Asume que el ID se pasa como parámetro en la URL
+        const {id} = req.params; // Asume que el ID se pasa como parámetro en la URL
 
         // Validación básica del ID
         if (!id || isNaN(id)) {
