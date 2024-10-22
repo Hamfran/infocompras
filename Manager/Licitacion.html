@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -43,21 +43,45 @@
             <button class="btn btn-secondary" id="btnActualizar">Actualizar Licitación</button>
         </div>
         
+        <!-- Formulario de búsqueda por ID Licitación -->
+        <form id="buscarForm" style="display: none;">
+            <div class="form-group">
+                <label for="idLicitacionBuscar">ID de Licitación:</label>
+                <input type="number" class="form-control" id="idLicitacionBuscar" placeholder="ID de Licitación" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Buscar</button>
+            <button type="button" class="btn btn-secondary" onclick="regresar()">Regresar</button>
+        </form>
+           <!-- Formulario de búsqueda por ID Solicitud -->
+           <form id="buscarSolicitud" style="display: none;">
+            <div class="form-group">
+                <label for="idSolicitudBuscar">ID de Solicitud:</label>
+                <input type="number" class="form-control" id="idSolicitudBuscar" placeholder="ID de Solicitud" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Buscar</button>
+            <button type="button" class="btn btn-secondary" onclick="regresar()">Regresar</button>
+        </form>
+
+        <!-- Formulario de inserción/actualización -->
         <form id="licitarForm" style="display: none;">
             <div class="form-group">
-                <label for="idSolicitudInput">ID Solicitud:</label>
+                <label for="idLicitacion">ID Licitación:</label>
+                <input type="number" class="form-control" id="idLicitacion" placeholder="ID Licitación" readonly> <!-- Campo para mostrar el ID -->
+            </div>
+            <div class="form-group">
+                <label for="idSolicitud">ID Solicitud:</label>
                 <input type="number" class="form-control" id="idSolicitud" placeholder="ID Solicitud" required>
             </div>
             <div class="form-group">
-                <label for="fechaPublicacionInput">Fecha de Publicación:</label>
+                <label for="fechaPublicacion">Fecha de Publicación:</label>
                 <input type="date" class="form-control" id="fechaPublicacion" required>
             </div>
             <div class="form-group">
-                <label for="fechaCierreInput">Fecha de Cierre:</label>
+                <label for="fechaCierre">Fecha de Cierre:</label>
                 <input type="date" class="form-control" id="fechaCierre" required>
             </div>
             <div class="form-group">
-                <label for="estadoInput">Estado:</label>
+                <label for="estado">Estado:</label>
                 <input type="text" class="form-control" id="estado" placeholder="Estado" required>
             </div>
             <button type="submit" class="btn btn-primary">Guardar</button>
@@ -88,54 +112,52 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    
+
     <script>
         document.getElementById('btnInsertar').addEventListener('click', function() {
-            document.getElementById('licitarForm').style.display = 'block';
+            document.getElementById('buscarSolicitud').style.display = 'block';
+            document.getElementById('licitarForm').style.display = 'none';
+            document.getElementById('buscarForm').style.display = 'none';
             document.getElementById('licitarForm').reset(); // Limpiar el formulario
             document.getElementById('licitarForm').setAttribute('data-action', 'insert'); // Establecer acción para insertar
         });
 
         document.getElementById('btnActualizar').addEventListener('click', function() {
-            document.getElementById('licitarForm').style.display = 'block';
-            document.getElementById('licitarForm').reset(); // Limpiar el formulario
-            document.getElementById('licitarForm').setAttribute('data-action', 'update'); // Establecer acción para actualizar
+            document.getElementById('buscarSolicitud').style.display = 'none';
+            document.getElementById('buscarForm').style.display = 'block'; // Mostrar el formulario para buscar por ID
+            document.getElementById('licitarForm').style.display = 'none';
+            document.getElementById('buscarForm').reset();
         });
 
-        document.getElementById('licitarForm').addEventListener('submit', async function(event) {
+        // Manejar la búsqueda de licitación por ID
+        document.getElementById('buscarForm').addEventListener('submit', async function(event) {
             event.preventDefault(); // Evitar el envío tradicional del formulario
 
-            const idSolicitud = document.getElementById('idSolicitud').value;
-            const fechaPublicacion = document.getElementById('fechaPublicacion').value;
-            const fechaCierre = document.getElementById('fechaCierre').value;
-            const estado = document.getElementById('estado').value;
+            const idLicitacion = document.getElementById('idLicitacionBuscar').value;
 
             try {
-                const response = await fetch('/Licitacion/insertLicitacion', {
-                    method: 'POST',
+                const response = await fetch(`/Licitacion/buscarLicitacion/${idLicitacion}`, {
+                    method: 'GET',
                     headers: {
                         'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ 
-                        ID_SOLICITUD: idSolicitud, 
-                        FECHA_PUBLICACION: fechaPublicacion, 
-                        FECHA_CIERRE: fechaCierre, 
-                        ESTADO: estado 
-                    })
+                    }
                 });
 
                 if (response.ok) {
-                    // Mostrar el modal de éxito
-                    $('#successModal').modal('show');
+                    const licitacion = await response.json();
+                    // Mostrar los datos en el formulario
+                    document.getElementById('idLicitacion').value = licitacion.ID_LICITACION; // Mostrar ID de Licitación
+                    document.getElementById('idSolicitud').value = licitacion.ID_SOLICITUD;
+                    document.getElementById('fechaPublicacion').value = licitacion.FECHA_PUBLICACION.split('T')[0];
+                    document.getElementById('fechaCierre').value = licitacion.FECHA_CIERRE.split('T')[0];
+                    document.getElementById('estado').value = licitacion.ESTADO;
 
-                    // Recargar la página automáticamente después de cerrar el modal
-                    $('#successModal').on('hidden.bs.modal', function () {
-                        window.location.reload(); // Recargar la página
-                    });
-
+                    document.getElementById('licitarForm').style.display = 'block'; // Mostrar el formulario para actualizar
+                    document.getElementById('buscarForm').style.display = 'none'; // Ocultar el formulario de búsqueda
+                    document.getElementById('licitarForm').setAttribute('data-action', 'update'); // Establecer acción para actualizar
+                    
                 } else {
-                    const data = await response.json();
-                    alert(data.message || 'Error en el proceso');
+                    alert('Licitación no encontrada');
                 }
             } catch (error) {
                 console.error('Error:', error);
@@ -143,9 +165,111 @@
             }
         });
 
-        function regresar() {
-            window.location.href = 'PaginaPrincipal.html'; 
+        // Manejar la búsqueda de solicitud por ID
+document.getElementById('buscarSolicitud').addEventListener('submit', async function(event) {
+    event.preventDefault(); // Evitar el envío tradicional del formulario
+
+    const idSolicitud = document.getElementById('idSolicitudBuscar').value; // Obtener el ID de la solicitud
+
+    try {
+        const response = await fetch(`/Licitacion/getFechaSolicitud/${idSolicitud}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.ok) {
+            const solicitud = await response.json();
+            // Mostrar los datos en el formulario
+            document.getElementById('idSolicitud').value = idSolicitud; // Mostrar ID de Solicitud en el formulario
+            document.getElementById('fechaPublicacion').value = solicitud.FECHA_SOLICITUD.split('T')[0]; // Mostrar FECHA_SOLICITUD en el campo de fecha
+            document.getElementById('fechaPublicacion').readOnly = true; // Hacer que el campo de fecha no sea editable
+            document.getElementById('licitarForm').style.display = 'block'; // Mostrar formulario de licitar
+            document.getElementById('buscarSolicitud').style.display = 'none'; // Ocultar formulario de búsqueda de solicitud
+            document.getElementById('licitarForm').setAttribute('data-action', 'insert'); // Establecer acción para insertar
+        } else {
+            alert('Solicitud no encontrada');
         }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error al conectar con el servidor');
+    }   
+});
+// Manejar el envío del formulario de inserción o actualización
+document.getElementById('licitarForm').addEventListener('submit', async function(event) {
+    event.preventDefault(); // Evitar el envío tradicional del formulario
+
+    const idLicitacion = document.getElementById('idLicitacion').value; // Obtener el ID de la licitación
+    const idSolicitud = document.getElementById('idSolicitud').value; // Obtener el ID de la solicitud
+    const fechaPublicacion = document.getElementById('fechaPublicacion').value;
+    const fechaCierre = document.getElementById('fechaCierre').value;
+    const estado = document.getElementById('estado').value;
+
+    // Verificar si la acción es insertar o actualizar
+    const action = document.getElementById('licitarForm').getAttribute('data-action');
+
+    try {
+        let response;
+        if (action === 'insert') {
+            // Hacer POST para insertar una nueva licitación
+            response = await fetch('/Licitacion/insertLicitacion', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ 
+                    ID_SOLICITUD: idSolicitud, 
+                    FECHA_PUBLICACION: fechaPublicacion, 
+                    FECHA_CIERRE: fechaCierre, 
+                    ESTADO: estado 
+                })
+            });
+        } else if (action === 'update') {
+            // Hacer PUT para actualizar la licitación existente
+            response = await fetch(`/Licitacion/actualizarLicitacion/${idLicitacion}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ 
+                    ID_LICITACION: idLicitacion,
+                    ID_SOLICITUD: idSolicitud, 
+                    FECHA_PUBLICACION: fechaPublicacion, 
+                    FECHA_CIERRE: fechaCierre, 
+                    ESTADO: estado 
+                })
+            });
+        }
+
+        if (response.ok) {
+            
+            if (action === 'insert') {
+            // Si el servidor responde correctamente, mostrar el modal de éxito o alerta
+            alert('Licitación Registrada con éxito');
+            window.location.reload(); // Recargar la página
+            }
+           
+         
+            else if  (action === 'update'){
+            alert('Licitación ACTUALIZADA con éxito');
+            window.location.reload(); // Recargar la página
+            }
+         
+        } else {
+            const data = await response.json();
+            alert(data.message || 'Error en el proceso');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error al conectar con el servidor');
+    }
+});
+
+
+function regresar() {
+    window.location.href = 'PaginaPrincipal.html'; 
+}
     </script>
 </body>
 </html>

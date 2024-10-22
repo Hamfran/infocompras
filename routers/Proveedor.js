@@ -6,4 +6,6 @@ const proveedorController= require('../controller/proveedorController');
 router.post('/registropro', proveedorController.registropro)
 
 router.get('/verproveedores', proveedorController.verprovedor)
+router.get('/imprimir', proveedorController.imprimirProvedores)
+
 module.exports = router;
