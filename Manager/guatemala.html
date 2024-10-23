@@ -52,11 +52,13 @@
             margin-left: 50px;
         }
         .map svg {
+            color: #4CAF50;
             width: 100%;
             height: auto;
             max-height: 500px;
         }
         .map path {
+            
             cursor: pointer;
             transition: fill 0.3s;
         }
@@ -97,7 +99,7 @@
         }
 
         .modal-content {
-            background-color: #fefefe;
+            background-color: #faf8f8;
             margin: 15% auto;
             padding: 20px;
             border: 1px solid #888;
@@ -113,7 +115,7 @@
         }
         .close:hover,
         .close:focus {
-            color: black;
+            color: rgb(71, 71, 2);
             text-decoration: none;
             cursor: pointer;
         }
@@ -564,6 +566,7 @@
             }
 
         }
+        
         async function verdepartamento() {
             try {
                 const response = await fetch('/Buscardepa/verdepartamentos');

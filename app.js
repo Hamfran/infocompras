@@ -1,19 +1,12 @@
 const express = require('express');
 const { poolPromise } = require('./config/conexionBD'); // Importamos la conexión a la base de datos
 const clienteRoutes = require('./routers/Usuarios');
-<<<<<<< HEAD
-const proveedorRoutes= require('./routers/Proveedor')
-const verproveedorRoutes= require('./routers/Proveedor')
-const selectGuatemalaRouter = require('./routers/selectGuatemala'); 
-=======
 const proveedorRoutes= require('./routers/Proveedor');
 const verproveedorRoutes= require('./routers/Proveedor');
 const selectGuatemalaRouter=require('./routers/selectGuatemala');
 const imprimirpdfRouters=require('./routers/Proveedor');
 const licitacionRoutes = require('./routers/Licitacion'); // rutas para departamentos
->>>>>>> b11ea4bb2081e9ff622728e5205aa4ff14dac207
 const generarsolicitudRoutes = require('./routers/Solicitud'); // rutas para departamentos
-const licitacionRoutes = require('./routers/Licitacion');
 const dotenv = require('dotenv');
 const app = express();
 const port = process.env.PORT || 3000;
