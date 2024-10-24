@@ -55,7 +55,6 @@ exports.verprovedor = async(req, res)=>{
         
      }
 
-
 }
 
 exports.imprimirProvedores = async (req, res) => {

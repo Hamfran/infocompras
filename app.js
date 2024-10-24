@@ -7,6 +7,7 @@ const selectGuatemalaRouter=require('./routers/selectGuatemala');
 const imprimirpdfRouters=require('./routers/Proveedor');
 const licitacionRoutes = require('./routers/Licitacion'); // rutas para departamentos
 const generarsolicitudRoutes = require('./routers/Solicitud'); // rutas para departamentos
+const estadisticaRoutes = require('./routers/Estadisticas');
 const dotenv = require('dotenv');
 const app = express();
 const port = process.env.PORT || 3000;
@@ -31,6 +32,8 @@ app.use('/Buscardepa', selectGuatemalaRouter);
 // Definir una ruta simple
 app.use('/Licitacion', licitacionRoutes);
 
+//el de estadistica en rutadores
+app.use('/Estadistica', estadisticaRoutes );
 app.get('/', (req, res) => {
     res.send('¡Hola! Conexión a SQL Server funcionando.');
 });
