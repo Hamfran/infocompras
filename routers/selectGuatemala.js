@@ -4,8 +4,8 @@ const selectGuatemalaController= require('../controller/SelectGuatemalaControlle
 
 
 
-router.get('/Buscardepa/verdepartamentos', selectGuatemalaController.verTodosDepartamentos);
+router.get('/verdepartamentos', selectGuatemalaController.verTodosDepartamentos);
 
 // Ruta para ver un departamento específico por ID
-router.get('Buscardepa/verdepartamento/:id', selectGuatemalaController.verDepartamentoPorId);
+router.get('/verdepartamento/:id', selectGuatemalaController.verDepartamentoPorId);
 module.exports = router;

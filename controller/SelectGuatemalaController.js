@@ -18,7 +18,7 @@ exports.verDepartamentoPorId = async (req, res) => {
         
         const pool = await poolPromise;
         const result = await pool.request()
-            .input('id', pool.sql.Int, parseInt(id))
+            .input('id',sql.Int, id)
             .query(query);
 
         if (result.recordset.length === 0) {

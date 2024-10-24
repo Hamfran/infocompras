@@ -38,7 +38,7 @@ app.get('/', (req, res) => {
 // Iniciar el servidor y conectar a la base de datos
 poolPromise.then(() => {
     app.listen(port, () => {
-        console.log(`Servidor escuchando en http://localhost:${port}`);
+        console.log(`Servidor escuchando en http://localhost:${port}/login.html`);
     });
 }).catch(err => {
     console.error('Error al conectar a la base de datos o iniciar el servidor:', err);
