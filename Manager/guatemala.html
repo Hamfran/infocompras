@@ -119,6 +119,20 @@
             text-decoration: none;
             cursor: pointer;
         }
+
+        /* Estilos para el contenedor de las tablas */
+.tablas-container {
+    display: flex; /* Utiliza flexbox para alinear las tablas una al lado de la otra */
+    justify-content: space-between; /* Espacio entre las tablas */
+    gap: 20px; /* Espacio entre las tablas */
+    margin: 20px; /* Margen general para el contenedor */
+}
+
+/* Asegura que las tablas tengan un tamaño máximo para que no se deformen */
+.table {
+    max-width: 45%; /* Cada tabla ocupará el 45% del ancho del contenedor */
+    flex: 1; /* Permite que cada tabla crezca o se ajuste dentro del contenedor */
+}
     </style>
 </head>
 <body>
@@ -265,6 +279,11 @@
             <button type="submit" class="btn btn-secondary" onclick="regresar()">Regresar</button>
         </div>
     </div>
+    </div>
+
+    <!-- Contenedor para ambas tablas -->
+<div class="tablas-container">
+    <!-- Segunda tabla -->
     <table class="table table-striped" id="tabladepa">
         <thead>
             <tr>
@@ -277,8 +296,11 @@
         </tbody>
     </table>
     <script>
+
+        document.addEventListener('DOMContentLoaded', verdepartamento);
         // Galería de imágenes
         const gallery = document.getElementById('gallery');
+        const btnBuscar = document.getElementById('btnBuscar');
 
         const images = [
             '../Image/tikal.jpg',
@@ -402,7 +424,7 @@
                 poblacion: "245,374",
                 capital: "Zacapa",
                 area_km2: 2690
-            ,
+            },
             chiquimula: {
                 id: 16,
                 nombre: "Chiquimula",
@@ -455,17 +477,18 @@
 
             
         }
-    }
+    
 
         // Crear el mapa SVG
         const mapaSvg = document.getElementById('map');
         let selectedDepartment = null;
+        const defaultColor  = '#00FF00'; 
 
         for (const [id, dept] of Object.entries(departamentos)) {
             const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
             path.setAttribute('id', id);
             path.setAttribute('d', dept.path);
-            path.setAttribute('fill', dept.color);
+            path.setAttribute('fill',defaultColor);
             path.setAttribute('stroke', '#000');
             path.setAttribute('stroke-width', '2');
             path.addEventListener('click', () => handleClick(id));
@@ -478,7 +501,7 @@
                 document.getElementById(selectedDepartment).setAttribute('fill', departamentos[selectedDepartment].color);
             }
             selectedDepartment = id;
-            document.getElementById(id).setAttribute('fill', '#FFFF00');
+            document.getElementById(id).setAttribute('fill', '#FF0000');
             updateTicket(id);
         }
 
@@ -508,72 +531,27 @@
 
         document.getElementById('btnRegresar').addEventListener('click', () => {
             location.reload();
-        });
-
-        // Modal de búsqueda MODIFICANDO DESDE ACA 21:74
-        const modal = document.getElementById('searchModal');
-        const btnbusqeuda = document.getElementById('btnbusqeuda');
-        const span = document.getElementsByClassName('close')[0];
-        const searchForm = document.getElementById('searchForm');
-        const empleadosTabla = document.getElementById('tabladepa').querySelector('tbody');
-        //busqueda en el modal
-        Busqueda.onclick = function() {
-            modal.style.display = 'block';
-        }
-        //ciera el modal osea la ventanita
-        span.onclick = function() {
-            modal.style.display = 'none';
-        }
-
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = 'none';
-            }
-        }
-        document.getElementById('btnVerTodos').addEventListener('click', verdepartamento );  {
+        }); 
             
-            function regresar() {
-            window.location.href = 'PaginaPrincipal.html'; 
-            }
-        }
+       
 
-
-        searchForm.onsubmit = async function(e) {
-            e.preventDefault();
-            const searchType = document.querySelector('input[name="searchType"]:checked').value;
-            const searchValue = document.getElementById('searchInput').value.trim();
-            let url;
-
-            if (searchType === 'id') {
-                url = `/Buscardepa/verempleado?id=${searchValue}`;
-                
-            } else {
-                url = `/Buscardepa/verempleado?nombre=${searchValue}`;
-            }
-            try {
-                const response = await fetch(url);
-                const departamentos = await response.json();
-
-                if (response.ok) {
-                    mostrardepartamento(departamentos);
-                    modal.style.display = 'none'; // Cerrar el modal después de la búsqueda
-                } else {
-                    alert('Error al buscar el departamento');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Error al conectar con el servidor');
-            }
-
-        }
         
+
+    
+
+     
         async function verdepartamento() {
+            
+            
             try {
                 const response = await fetch('/Buscardepa/verdepartamentos');
                 const departamentos = await response.json();
+                
 
                 if (response.ok) {
+                   
                     mostrardepartamento(departamentos);
+                
                 } else {
                     alert('Error al cargar departamentos');
                 }
@@ -590,14 +568,21 @@
             departamentos.forEach(departamento => {
                 const fila = document.createElement('tr');
                 fila.innerHTML = `
-                    <td>${departamento.id || 'N/A'}</td>
+                    <td>${departamento.ID_DEPARTAMENTO || 'N/A'}</td>
                     <td>${departamento.NOMBRE}</td>
                 `;
                 tabla.appendChild(fila);
             });
         }
+        
+       
 
-        document.addEventListener('DOMContentLoaded', verdepartamento);
+        function regresar() {
+            window.location.href = 'PaginaPrincipal.html'; 
+      
+         }
+         btnBuscar.addEventListener('click,',buscarDepartamento);
     </script>
+    
 </body>
 </html>
