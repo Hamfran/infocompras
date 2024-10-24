@@ -1,9 +1,11 @@
 const {poolPromise, sql}= require('../config/conexionBD');
 const PDFDocument  = require('pdfkit');
 
-/*AQUI ARE LA D OBTERNER MIS VNETAS TOTEALES QEU 
-EMPLEARE EN MI VISTA DE ESTADISTICA 
-exports.obtenerVentasTotales = async (req, res)=> {*/
+/*AQUI OBTENEMOS LAS ADJUDICACIONES DE UN PROVEEDOR
+EN ESPECIFICO POR SU ID
+Y VALIADOS SI ESTA ENTRE EL RANGO DE FECHAS PARAMETROS
+A RECIBIR SON LOS DE FECHA INICIO
+FECHA FINAL Y EL IMPORTANTE EL DEL ID DEL PROVEEDOR*/
 exports.obtenerAdjudicacionesPorFecha = async (req, res) => {
     const { idProveedor, fechaInicio, fechaFin, } = req.query;
     try {
@@ -48,30 +50,37 @@ exports.obtenerAdjudicacionesPorFecha = async (req, res) => {
     }
 };
 
+/*VOY A IR A HACER UN JOIN DE MIS TABLAS VALIDADNDO
+QUE HA SOLICIDADO UN DEPARTAMENTO EN ESPECIFICO
+CON SU ID MUESTRA QUE HA PEDIDO EN UNA TABLA */
 
-exports.obtenerTopProveedores = async (req, res) => {
-    const { fechaInicio, fechaFin, limite = 5 } = req.query;
+exports.solicitudesdeundepartamento = async (req, res) => {
+    const { idDepartamento} = req.query;
     try {
-        const query = `
-            SELECT TOP (@limite) p.NOMBRE, SUM(v.MONTO_TOTAL) as VENTAS_TOTALES
-            FROM VENTAS v
-            JOIN PRODUCTOS pr ON v.ID_PRODUCTO = pr.ID_PRODUCTO
-            JOIN PROVEEDOR p ON pr.ID_PROVEEDOR = p.ID_PROVEEDOR
-            WHERE v.FECHA_VENTA BETWEEN @fechaInicio AND @fechaFin
-            GROUP BY p.NOMBRE
-            ORDER BY VENTAS_TOTALES DESC`;
+        const query = ` SELECT 
+                    sl.ID_SOLICITUD,
+                    sl.ID_CATEGORIA,
+                    cp.NOMBRE_CATEGORIA,
+                    sl.CANTIDAD,
+                    sl.MONTO_TOTAL,
+                    sl.ID_DEPARTAMENTO,
+                    sl.ESTADO,
+                    d.NOMBRE as NOMBRE_DEPARTAMENTO
+                    FROM SOLICITUD_LICITACION sl
+                    JOIN DEPARTAMENTO d ON sl.ID_DEPARTAMENTO = d.ID_DEPARTAMENTO
+                    JOIN CATEGORIA_PRODUCTO cp ON sl.ID_CATEGORIA = cp.ID_CATEGORIA
+                    WHERE sl.ID_DEPARTAMENTO = @idDepartamento;
+            `;
 
         const pool = await poolPromise;
         const result = await pool.request()
-            .input('fechaInicio', sql.Date, fechaInicio)
-            .input('fechaFin', sql.Date, fechaFin)
-            .input('limite', sql.Int, limite)
+            .input('idDepartamento', sql.Int, idDepartamento)
             .query(query);
 
         res.status(200).json(result.recordset);
     } catch (error) {
-        console.error('Error al obtener top proveedores:', error);
-        res.status(500).json({ message: 'Error en la base de datos al obtener top proveedores' });
+        console.error('Error al obtener solicides que tiene un departamento:', error);
+        res.status(500).json({ message: 'Error en la base de datos al obtener departamentos' });
     }
 };
 

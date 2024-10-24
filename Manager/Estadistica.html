@@ -130,7 +130,29 @@ nav {
     padding: 20px;
     border-radius: 5px;
 }
-#tablaAdjudicaciones {
+#tablaDepartamentos
+ {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        #tablaDepartamentos th,
+        #tablaDepartamentos td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        #tablaDepartamentos th {
+            background-color: #f4f4f4;
+        }
+        #tablaDepartamentos tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        #tablaDepartamentos tr:hover {
+            background-color: #f5f5f5;
+        }
+#tablaAdjudicaciones
+ {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
@@ -195,6 +217,7 @@ nav {
                     <button id="btnFiltrar">Filtrar</button>
                     <button id="btnBuscarid">Buscar Por Id</button>
                     <input type="text" id="idproveedor" placeholder="ID proveeodr a buscar por adjudicacion">
+                    <input type="text" id="idDepartamento" placeholder="Departamento id">
                 </div>
             </section>
             <section id="graficas">
@@ -205,6 +228,7 @@ nav {
             <section id="resumen">
                 <h2>Resumen de Estadísticas</h2>
                 <div id="resumenData"></div>
+                <div id="resumenDataDepa"></div>
             </section>
         </main>
         <table class="table table-striped" id="tablaAdjudicaciones">
@@ -219,6 +243,23 @@ nav {
                 <!-- Aquí se agregarán las filas de proveedores dinámicamente -->
             </tbody>
         </table>
+        <table class="table table-striped" id="tablaDepartamentos">
+            <thead>
+                <tr>
+                    <th>ID SOLICITUD</th>
+                    <th>ID</th>
+                    <th>NOMBRE_CATEGORIA</th>
+                    <th>CANTIDAD</th>
+                    <th>MONTO_TOTAL</th>
+                    <th>ID_DEPARTAMENTO</th>
+                    <th>ESTADO</th>
+                    <th>NOBRE DEL DEPARTAMENTO</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Aquí se agregarán las filas de departamento -->
+            </tbody>
+        </table>
     </div>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -228,6 +269,7 @@ nav {
     const fechaInicio = document.getElementById('fechaInicio');
     const fechaFin = document.getElementById('fechaFin');
     const idProveedorInput = document.getElementById('idproveedor');
+    const idDepartamentoInput = document.getElementById('idDepartamento');
     // Referencia al canvas para la gráfica
     const ctx = document.getElementById('chartVentas').getContext('2d');
     let chart; // Variable para almacenar el gráfico
@@ -254,7 +296,7 @@ nav {
                     alert('Hubo un error al obtener los datos: ' + error.message);
                 }
     };
-     // Función para mostrar los datos en una tabla
+     /*MI TABLA DE MOSTRAR ADJUDICACIONES POR ID DE PROVEEDOR*/
      const mostrarDatosEnTabla = (datos) => {
                 let tabla = document.getElementById('tablaAdjudicaciones');
                 if (!tabla) {
@@ -281,6 +323,69 @@ nav {
                     </tbody>
                 `;
                 actualizarGrafica(datos);
+            };
+
+            /*AQUI VA LA FORMA EN COMO PIDO QUE ME DEN EL ID DEL DEPARTAMENT
+            PARA VERLO */
+
+    const obtenerDepartamentos = async () => {
+        try {
+            // Validaciones
+            if (!idDepartamentoInput.value) {
+                alert('El id no es correcto');
+                return;
+            }
+
+            const response = await fetch(`/Estadistica/solipordepartamento?idDepartamento=${idDepartamentoInput.value}`) 
+            if (!response.ok) {
+                        throw new Error('Error en la respuesta del servidor');
+                    }
+
+                    const datos = await response.json();
+                    mostrarDepartamentostabla(datos);
+
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Hubo un error al obtener los datos: ' + error.message);
+                }
+    };
+
+            /*AQUI VA MI TABLA DE DEPARTAMENTOS*/
+            const mostrarDepartamentostabla = (datos) => {
+                let tabla = document.getElementById('tablaDepartamentos');
+                if (!tabla) {
+                    tabla = document.createElement('table');
+                    tabla.id = 'tablaDepartamentos';
+                    document.getElementById('resumenDataDepa').appendChild(tabla);
+                }
+                tabla.innerHTML = `
+                    <thead>
+                        <tr>
+                            <th>No.solicitud</th>
+                            <th>Categoria</th>
+                            <th>Nombre</th>
+                            <th>Cantidad</th>
+                            <th>Monto Total</th>
+                            <th>ID</th>
+                            <th>Departamento</th>
+                            <th>Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${datos.map(item => `
+                            <tr>
+                                <td>${item.ID_SOLICITUD}</td>
+                                <td>${item.ID_CATEGORIA}</td>
+                                <td>${item.NOMBRE_CATEGORIA}</td>
+                                <td>${item.CANTIDAD}</td>
+                                <td>${item.MONTO_TOTAL}</td>
+                                <td>${item.ID_DEPARTAMENTO}</td>
+                                <td>${item.ESTADO}</td>
+                                <td>${item.NOMBRE_DEPARTAMENTO}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                `;
             };
    /*FUNCIONA TOOD DESDE ACA*/
    /*IMPLEMENTO DE GRAFICA */
@@ -332,7 +437,7 @@ nav {
    
    /*Y ACA CON ACION DE BOTONES*/
     // Event Listeners
-    btnFiltrar.addEventListener('click', obtenerAdjudicaciones);
+    btnFiltrar.addEventListener('click', obtenerDepartamentos, mostrarDepartamentostabla);
     btnBuscarid.addEventListener('click', obtenerAdjudicaciones, mostrarDatosEnTabla);
 });
     </script>
