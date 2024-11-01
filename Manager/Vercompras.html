@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestionar Compra</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #343a40;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #007bff;
+        }
+        .form-group label {
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Buscar Compras Activas</h2>
+        <table class="table table-striped mt-4" id="tablacompra">
+            <thead>
+                <tr>
+                    <th>ID Licitación</th>
+                    <th>ID Solicitud</th>
+                    <th>Fecha Publicación</th>
+                    <th>Fecha Cierre</th>
+                    <th>Estado Licitación</th>
+                    <th>ID Usuario</th>
+                    <th>Cantidad</th>
+                    <th>Monto Total</th>
+                    <th>Descripción</th>
+                    <th>Nombre Categoría</th>
+                    <th>Nombre Departamento</th>
+                    <th>Nombre Producto</th>
+                    <th>Descripción Producto</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Aquí se agregarán las filas de compras dinámicamente -->
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        // Función para cargar automáticamente las compras activas al cargar la página
+        async function cargarCompras() {
+            try {
+                const response = await fetch('/Compras/buscarcompras', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const compras = await response.json();
+                    mostrarResultados(compras);
+                } else {
+                    alert('No se encontraron compras en estado activo');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        function mostrarResultados(compras) {
+            const tbody = document.querySelector('#tablacompra tbody');
+            tbody.innerHTML = ''; // Limpiar resultados anteriores
+            compras.forEach(compra => {
+                const row = `<tr>
+                    <td>${compra.ID_LICITACION}</td>
+                    <td>${compra.ID_SOLICITUD}</td>
+                    <td>${compra.FECHA_PUBLICACION}</td>
+                    <td>${compra.FECHA_CIERRE}</td>
+                    <td>${compra.ESTADO_LICITACION}</td>
+                    <td>${compra.ID_USUARIO}</td>
+                    <td>${compra.CANTIDAD}</td>
+                    <td>${compra.MONTO_TOTAL}</td>
+                    <td>${compra.DESCRIPCION}</td>
+                    <td>${compra.NOMBRE_CATEGORIA}</td>
+                    <td>${compra.NOMBRE_DEPARTAMENTO}</td>
+                    <td>${compra.NOMBRE_PRODUCTO}</td>
+                    <td>${compra.DESCRIPCION_PRODUCTO}</td>
+                </tr>`;
+                tbody.innerHTML += row;
+            });
+        }
+
+        // Cargar las compras al entrar en la página
+        cargarCompras();
+    </script>
+</body>
+</html>

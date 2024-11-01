@@ -34,14 +34,14 @@
                         <p>Quieres conocer todas las oportunidades que puedes realizar con nosotros</p>
                         <img src="/Image/adjud.webp" alt="Producto 1" class="product-image">
                         <p>Detalles...</p>
-                        <button>Ver Más</button>
+                        <button onclick="irAVerCompras()">COMPRAR PRODUCTOS</button>
                     </div>
                     <div class="card">
                         <h3>Procesos Adjudicados</h3>
                         <p>Quieres conocer cuantos procesos de adjudicacion estamos realizando el dia de hoy</p>
                         <img src="/Image/compra.png" alt="Producto 2" class="product-image">
                         <p>Detalles ...</p>
-                        <button>Ver Más</button>
+                        <button onclick="irAVerComprasInactivas()">PROCESOS TERMINADOS</button>
                     </div>
                     <div class="card">
                         <h3>Departamentos Beneficiados</h3>
@@ -102,5 +102,17 @@
     </div>
     <script src="/controller/ofertascontroller.js"></script> 
     <script src="/controller/Estadistica.js"></script> 
+    <script>
+        // Función para redireccionar a la página de Vercompras
+        function irAVerCompras() {
+            window.location.href = 'Compras.html'; // Cambia la ruta si es necesario
+        }
+    </script>
+    <script>
+        // Función para redireccionar a la página de VercomprasInactivas
+        function irAVerComprasInactivas() {
+            window.location.href = 'ComprasInactivas.html'; // Cambia la ruta si es necesario
+        }
+    </script>
 </body>
 </html>
