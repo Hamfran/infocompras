@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f9fa;
+        color: #343a40;
+    }
+    .container {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+    }
+    h2 {
+        color: #007bff;
+    }
+    .form-group label {
+        color: #007bff;
+    }
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        align-items: center;
+    }
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
+</style>
+<body>
+    <div class="d-flex justify-content-between">
+        <button type="button" class="btn btn-secondary" onclick="regresar()">Actualizar</button>
+        <button type="button" class="btn btn-secondary" onclick="regresarainicio()">Regresar</button>
+
+    </div>
+    <table class="table table-striped" id="tablasolicitudes">
+        <thead>
+            <tr>
+                <th>ID_PROVEEDOR</th>
+                <th>nombre_proveedor</th>
+                <th>total_adjudicaciones</th>
+                <th>monto_total_adjudicado</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Aquí se agregarán las filas de proveedores dinámicamente -->
+        </tbody>
+    </table>
+    <script> 
+        async function versolicitudes() {
+            try {
+                const response = await fetch('/Registro/topproveedores');
+                const solicitud = await response.json();
+
+                if (response.ok) {
+                    mostrarsolicitud(solicitud);
+                } else {
+                    alert('Error al cargar solicitud');
+                }
+            } catch (error) {
+                console.error('Error al obtener solicitudes:', error);
+                alert('Error al conectar con el servidor');
+            }
+        }
+
+        function mostrarsolicitud(solicitudes) {
+            const tabla = document.querySelector('#tablasolicitudes tbody');
+            tabla.innerHTML = ''; // Limpiar la tabla antes de agregar los nuevos datos
+
+            solicitudes.forEach(solicitud => {
+                const fila = document.createElement('tr');
+                fila.innerHTML = `
+                    <td>${solicitud.ID_PROVEEDOR || 'N/A'}</td>
+                    <td>${solicitud.nombre_proveedor || 'N/A'}</td>
+                    <td>${solicitud.total_adjudicaciones || 'N/A'}</td>
+                    <td>${solicitud.monto_total_adjudicado || 'N/A'}</td>
+                    `;
+                
+                tabla.appendChild(fila);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', versolicitudes);
+        
+        function regresarainicio() {
+        window.location.href = 'Estadistica.html'; 
+        document.addEventListener('DOMContentLoaded', mostrarsolicitud);
+        }
+    </script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+      <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

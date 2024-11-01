@@ -8,4 +8,6 @@ router.post('/generarsolicitud', GenerasolicitudController.generarsoli)
 // Ruta para registrar un nuevo usuario 
 router.get('/versolicitud', GenerasolicitudController.versolicitudes)
 
+
+
 module.exports = router;

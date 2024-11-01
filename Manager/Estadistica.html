@@ -76,15 +76,21 @@ nav {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
+    margin-left: 10px;
 }
 
 .date-range label {
     margin-right: 10px;
 }
+.date-range input {
+    margin-right: 10px;
+    margin-left: 10px;
+}
 
 .date-range input[type="date"] {
     margin-right: 20px;
     padding: 5px;
+    
 }
 
 #btnFiltrar {
@@ -95,6 +101,7 @@ nav {
     cursor: pointer;
     transition: background-color 0.3s;
     size-adjust: auto ;
+    margin-left: 10px;
 }
 #btnBuscarid {
     background-color: var(--color-accent);
@@ -103,6 +110,7 @@ nav {
     padding: 5px 15px;
     cursor: pointer;
     transition: background-color 0.3s;
+    margin-left: 10px;
 }
 
 
@@ -181,6 +189,7 @@ nav {
     .nav-btn {
         width: 100%;
         margin-bottom: 10px;
+        margin-left: 10px;
     }
 
     .date-range {
@@ -197,14 +206,13 @@ nav {
 <body>
     <div class="container">
         <header>
-            <h1>Estadisticas De las Areas</h1>
+            <h1>Estadisticas Por Departamentos</h1>
         </header>
         <nav>
-            <button id="btnVentas" class="nav-btn">Adjudicaciones por Id</button>
+            <button id="btnDepartamentos" class="nav-btn">Top Departamentos</button>
             <button id="btnProveedores" class="nav-btn">Top Proveedores</button>
-            <button id="btnProductos" class="nav-btn">Productos Más Vendidos</button>
-            <button id="btnDepartamentos" class="nav-btn">Consumo por Departamento</button>
-            <button id="btnComparativa" class="nav-btn">Comparativa Compras/Ventas</button>
+            <button id="btnProductos" class="nav-btn">Top Productos</button>
+
         </nav>
         <main>
             <section id="filtroFechas">
@@ -270,6 +278,9 @@ nav {
     const fechaFin = document.getElementById('fechaFin');
     const idProveedorInput = document.getElementById('idproveedor');
     const idDepartamentoInput = document.getElementById('idDepartamento');
+    const btnDepartamentos =  document.getElementById('btnDepartamentos');
+    const btnProveedores = document.getElementById('btnProveedores');
+    const btnProductos = document.getElementById('btnProductos');
     // Referencia al canvas para la gráfica
     const ctx = document.getElementById('chartVentas').getContext('2d');
     let chart; // Variable para almacenar el gráfico
@@ -439,6 +450,13 @@ nav {
     // Event Listeners
     btnFiltrar.addEventListener('click', obtenerDepartamentos, mostrarDepartamentostabla);
     btnBuscarid.addEventListener('click', obtenerAdjudicaciones, mostrarDatosEnTabla);
+    btnDepartamentos.addEventListener('click', function(){
+        location.href= 'TopDepartamentos.html';});
+    btnProductos.addEventListener('click', function(){
+        location.href= 'TopProductos.html';});
+    btnProveedores.addEventListener('click', function(){
+        location.href= 'TopProveedores.html';});
+
 });
     </script>
 </body>
