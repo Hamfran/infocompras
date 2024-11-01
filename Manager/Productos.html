@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Productos</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --background-color: #ecf0f1;
+            --text-color: #34495e;
+            --card-background: #ffffff;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--primary-color);
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button.primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        button.secondary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        button:hover {
+            opacity: 0.8;
+        }
+
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            background-color: var(--card-background);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .product-card h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+
+        .product-card p {
+            margin: 5px 0;
+        }
+
+        .product-card .price {
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: var(--card-background);
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 500px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 600px) {
+            .buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+        <div class="container">
+            <h1>Gestión de Productos</h1>
+            <div class="buttons">
+                <button class="primary" onclick="openModal()">Ingresar Producto</button>
+                <button class="secondary" onclick="showAllProducts()">Ver Todos</button>
+                <button class="secondary" onclick="regresar()">Regresar</button>
+            </div>
+            <div id="products" class="products"></div>
+        </div>
+    
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <h2 id="modalTitle">Ingresar Nuevo Producto</h2>
+                <form id="productForm">
+                    <input type="hidden" id="productId">
+                    <label for="categoria">Categoría:</label>
+                    <input type="number" id="categoria" required> <!-- Ahora es un campo numérico -->
+                    <label for="nombre">Nombre del Producto:</label>
+                    <input type="text" id="nombre" required>
+                    <label for="descripcion">Descripción:</label>
+                    <textarea id="descripcion" required></textarea>
+                    <label for="precioUnitario">Precio Unitario:</label>
+                    <input type="number" id="precioUnitario" step="0.01" required>
+                    <button type="submit" class="primary">Guardar</button>
+                </form>
+            </div>
+        </div>
+    
+        <script>
+            // Mostrar los productos almacenados en la base de datos
+            async function showAllProducts() {
+                try {
+                    const response = await fetch('/Productos/verproductos');
+                    const productos = await response.json();
+                    
+                    if (response.ok) {
+                        mostrarProductosEnTarjetas(productos);
+                    } else {
+                        alert('Error al cargar productos');
+                    }
+                } catch (error) {
+                    console.error('Error al cargar productos:', error);
+                }
+            }
+    
+           
+                 function mostrarProductosEnTarjetas(productos) {
+                const productsContainer = document.getElementById('products');
+                productsContainer.innerHTML = '';
+
+                productos.forEach(producto => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                const idProducto = producto.ID_PRODUCTO || 'ID no disponible';
+                const nombreProducto = producto.NOMBRE_PRODUCTO || 'Nombre no disponible';
+                const categoria = producto.ID_CATEGORIA || 'Categoría no disponible';
+                const descripcion = producto.DESCRIPCION || 'Descripción no disponible';
+                const precioUnitario = producto.PRECIO_UNITARIO !== undefined && !isNaN(producto.PRECIO_UNITARIO)
+                ? `Q${producto.PRECIO_UNITARIO.toFixed(2)}`
+                : 'Precio no disponible';
+
+            
+
+                card.innerHTML = `
+                <h3>${nombreProducto}</h3>
+                <p><strong>ID Producto:</strong> ${idProducto}</p>
+                <p><strong>Categoría:</strong> ${categoria}</p>
+                <p>${descripcion}</p>
+                <p class="price">Precio: ${precioUnitario}</p>
+            `;
+            productsContainer.appendChild(card);
+        });
+        }
+
+            // Lógica para enviar el formulario de producto
+            document.getElementById('productForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+    
+                const newProduct = {
+                    ID_CATEGORIA: parseInt(document.getElementById('categoria').value), // Aseguramos que sea un número
+                    NOMBRE_PRODUCTO: document.getElementById('nombre').value,
+                    DESCRIPCION: document.getElementById('descripcion').value,
+                    PRECIO_UNITARIO: parseFloat(document.getElementById('precioUnitario').value)
+                };
+    
+                try {
+                    const response = await fetch('/Productos/registroproductos', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(newProduct)
+                    });
+    
+                    if (response.ok) {
+                        const product = await response.json();
+                        closeModal();
+                        showAllProducts();
+                    } else {
+                        alert('Error al guardar el producto');
+                    }
+                } catch (error) {
+                    console.error('Error al guardar el producto:', error);
+                    alert('Error al conectar con el servidor');
+                }
+            });
+    
+            // Abrir y cerrar el modal
+            function openModal() {
+                document.getElementById('modal').style.display = 'block';
+            }
+    
+            function closeModal() {
+                document.getElementById('modal').style.display = 'none';
+            }
+            function regresar(){
+                window.location.href = 'PaginaPrincipal.html'; 
+            }
+            // Cargar productos al cargar la página
+            document.addEventListener('DOMContentLoaded', showAllProducts);
+        </script>
+</body>
+</html>
