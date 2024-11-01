@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Licitaciones Activas</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+<style> 
+:root {
+    --color-primary: #3498db;
+    --color-secondary: #2ecc71;
+    --color-background: #ecf0f1;
+    --color-text: #34495e;
+    --color-accent: #e74c3c;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: var(--color-background);
+    color: var(--color-text);
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    background-color: var(--color-primary);
+    color: white;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.nav-btn {
+    background-color: var(--color-secondary);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin: 5px;
+    flex-grow: 1;
+}
+
+.nav-btn:hover {
+    background-color: #27ae60;
+}
+
+#filtroFechas {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.date-range {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.date-range label {
+    margin-right: 10px;
+}
+
+.date-range input[type="date"] {
+    margin-right: 20px;
+    padding: 5px;
+}
+
+#btnFiltrar {
+    background-color: var(--color-accent);
+    color: white;
+    border: none;
+    padding: 5px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    size-adjust: auto ;
+}
+#btnBuscarid {
+    background-color: var(--color-accent);
+    color: white;
+    border: none;
+    padding: 5px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+
+#btnFiltrar:hover {
+    background-color: #c0392b;
+}
+#btnBuscarid:hover {
+    background-color: #c0392b;
+}
+
+.chart-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    width: 100%; 
+    height: 400px;
+    margin: auto;
+    border: 2px solid black;
+}
+
+#resumen {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+}
+#tablaLicitaciones
+ {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        #tablaLicitaciones th,
+        #tablaLicitaciones td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        #tablaLicitaciones th {
+            background-color: #f4f4f4;
+        }
+        #tablaLicitaciones tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        #tablaLicitaciones tr:hover {
+            background-color: #f5f5f5;
+        }
+
+@media (max-width: 768px) {
+    nav {
+        flex-direction: column;
+    }
+
+    .nav-btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .date-range {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .date-range input[type="date"] {
+        margin-bottom: 10px;
+    }
+    
+}
+</style>
+<body>
+    <div class="container">
+        <header>
+            <h1>Estadisticas De las Areas</h1>
+        </header>
+       
+        <section id="resumen" >
+            <h2> resumen </h2>
+            <div id="resumenData"></div>
+            
+        </section>
+
+       
+        <table class="table table-striped" id="tablaLicitaciones">
+            <thead>
+                <tr>
+                    <th>Id de la Solicitud</th>
+                    <th>Fecha que fue publicada</th>
+                    <th>Fecha estimada de cierre</th>
+                    <th>Estado en que se encuentra</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Aquí se agregarán las filas de proveedores dinámicamente -->
+            </tbody>
+        </table>
+        
+    </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+    // Referencias a elementos DOM
+    
+    // Función para obtener adjudicaciones
+    const obtenerAdjudicaciones = async () => {
+        try {
+
+            const response = await fetch(`/Estadistica/adjuporidfecha`)
+            if (!response.ok) {
+                        throw new Error('Error en la respuesta del servidor');
+                    }
+
+                    const datos = await response.json();
+                    mostrarDatosEnTabla(datos);
+
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Hubo un error al obtener los datos: ' + error.message);
+                }
+    };
+     /*MI TABLA DE MOSTRAR ADJUDICACIONES POR ID DE PROVEEDOR*/
+     const mostrarDatosEnTabla = (datos) => {
+                let tabla = document.getElementById('tablaLicitaciones');
+                if (!tabla) {
+                    tabla = document.createElement('table');
+                    tabla.id = 'tablaLicitaciones';
+                    document.getElementById('resumenData').appendChild(tabla);
+                }
+                tabla.innerHTML = `
+                    <thead>
+                        <tr>
+                            <th>Id de la Solicitud</th>
+                            <th>Fecha que fue publicada</th>
+                            <th>Fecha estimada de cierre</th>
+                            <th>Estado en que se encuentra</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${datos.map(item => `
+                            <tr>
+                                <td>${item.ID_SOLICITUD}</td>
+                                <td>${new Date(item.FECHA_PUBLICACION).toLocaleDateString()}</td>
+                                <td>${new Date(item.FECHA_CIERRE).toLocaleDateString()}</td>
+                                 <td>${item.ESTADO}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                `;
+                actualizarGrafica(datos);
+            };
+
+            /*AQUI VA LA FORMA EN COMO PIDO QUE ME DEN EL ID DEL DEPARTAMENT
+            PARA VERLO */
+
+    
+   /*Y ACA CON ACION DE BOTONES*/
+    // Event Listeners
+    btnFiltrar.addEventListener('click', obtenerDepartamentos, mostrarDepartamentostabla);
+    btnBuscarid.addEventListener('click', obtenerAdjudicaciones, mostrarDatosEnTabla);
+});
+    </script>
+</body>
+</html>
