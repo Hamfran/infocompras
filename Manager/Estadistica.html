@@ -212,6 +212,7 @@ nav {
             <button id="btnDepartamentos" class="nav-btn">Top Departamentos</button>
             <button id="btnProveedores" class="nav-btn">Top Proveedores</button>
             <button id="btnProductos" class="nav-btn">Top Productos</button>
+            <button id="btnRegresar" class="nav-btn">REGRESAR</button>
 
         </nav>
         <main>
@@ -281,6 +282,7 @@ nav {
     const btnDepartamentos =  document.getElementById('btnDepartamentos');
     const btnProveedores = document.getElementById('btnProveedores');
     const btnProductos = document.getElementById('btnProductos');
+    const btnRegresar = document.getElementById('btnRegresar');
     // Referencia al canvas para la gráfica
     const ctx = document.getElementById('chartVentas').getContext('2d');
     let chart; // Variable para almacenar el gráfico
@@ -456,6 +458,9 @@ nav {
         location.href= 'TopProductos.html';});
     btnProveedores.addEventListener('click', function(){
         location.href= 'TopProveedores.html';});
+    btnRegresar.addEventListener('click', function(){
+        location.href= 'PaginaPrincipal.html';});
+
 
 });
     </script>

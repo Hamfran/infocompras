@@ -9,7 +9,7 @@ const licitacionRoutes = require('./routers/Licitacion'); // rutas para departam
 const generarsolicitudRoutes = require('./routers/Solicitud'); // rutas para departamentos
 const estadisticaRoutes = require('./routers/Estadisticas');
 const ComprasRouters = require('./routers/Compras');
-
+const PorductosRoutes = require('./routers/Productos');
 const dotenv = require('dotenv');
 const app = express();
 const port = process.env.PORT || 3000;
@@ -33,6 +33,8 @@ app.use('/Solicitud', generarsolicitudRoutes);
 app.use('/Buscardepa', selectGuatemalaRouter);
 // Definir una ruta simple
 app.use('/Licitacion', licitacionRoutes);
+
+app.use('/Productos', PorductosRoutes);
 //el de estadistica en rutadores
 app.use('/Estadistica', estadisticaRoutes );
 //el de compras en rutadores
