@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio index</title>
-</head>
-<style> 
-     * {
+    <title>Inicio - Proyecto Ingeniería</title>
+    <style> 
+        * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -17,15 +16,50 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            background: darkslategray;
+            background: linear-gradient(to right, #2c3e50, #4ca1af);
             background-size: cover;
-            position: relative;
+            color: #ffffff;
         }
-</style>
+        .container {
+            text-align: center;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: #f0f0f0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .btn {
+            padding: 12px 24px;
+            font-size: 1.2em;
+            color: #ffffff;
+            background-color: #4ca1af;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+        }
+        .btn:hover {
+            background-color: #3b8d99;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
 <body>
-    <section> 
-       <h2>BIENVENIDO AL PROGYECTO DE 3ER AÑO DE INGENIERIA</h2>
+    <div class="container"> 
+        <h2>Bienvenido al Proyecto de Ingeniería - 3er Año</h2>
+        <button type="button" class="btn" onclick="regresar()">Ingresar a la página</button>
+    </div>
 
-    </section>
+    <script>
+        function regresar() {
+            window.location.href = 'Manager/Login.html'; 
+        }
+    </script>
 </body>
 </html>
